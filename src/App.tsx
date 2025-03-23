@@ -1,21 +1,26 @@
 import dummyData from "./data/todos"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTodoForm from "./components/AddTodoForm";
 import TodoList from "./components/TodoList";
+import TodoSummary from "./components/TodoSummary";
 
 function App() {
   const [todos, setTodos] = useState(dummyData);
 
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos])  //used whenever state fo the todos changes
+
   function setTodoCompleted(id: number, completed: boolean){
-    setTodos((prevTodos) => 
-      prevTodos.map((todo) => (todo.id === id ? {...todo, completed} : todo
+    setTodos(prevTodos => 
+      prevTodos.map(todo => (todo.id === id ? {...todo, completed} : todo
     ))) ; // basically in the beginning todos == dummystate and prevTodo == todos. also {...todo, completed} is shorthand for completed: completed. 
   }
 
   function addTodo (title: string){
     setTodos((prevTodos) => [
       {
-        id: prevTodos.length + 1,
+        id: Date.now(),  //this was changed from lenght + 1 bcz length keeps changing if deleted which leads to multiple task with same id causing bugggin when deleting. Date.now would give unique because it goes to milliseconds
         title,
         completed: false
       },
@@ -27,8 +32,15 @@ function App() {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id != id))
   }
 
+  function deleteCompletedTodos(){
+    setTodos(
+      prevTodos => prevTodos.filter(todo => !todo.completed)
+    )
+  }
+
+
   return (
-    <main className="py-10 h-screen space-y-5">
+    <main className="py-10 h-screen space-y-5  overflow-y-auto">
       <h1 className="font-bold text-3xl text-center">
         Your todos
       </h1>
@@ -40,6 +52,9 @@ function App() {
           onCompletedChange={setTodoCompleted}
           onDelete={deleteTodo}/>
       </div>
+      <TodoSummary 
+        todos={todos}
+        deleteAllCompleted={deleteCompletedTodos}/>
     </main>
  );
 }

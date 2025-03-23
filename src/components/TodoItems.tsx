@@ -16,7 +16,7 @@ function TodoItems( {todo, onCompletedChange, onDelete} : TodoItemsProps) {
                     <input 
                     type="checkbox"
                     checked={todo.completed}
-                    className="scale-125"
+                    className="scale-125 accent-gray-500 cursor-pointer"
                     onChange = {(e) => onCompletedChange(todo.id, e.target.checked)}
                     />
                     <span className={ todo.completed ? " ml-2 text-gray-300 line-through " : "ml-2"}>
@@ -26,7 +26,7 @@ function TodoItems( {todo, onCompletedChange, onDelete} : TodoItemsProps) {
                 
                 <button 
                     onClick={() => onDelete(todo.id)}
-                    className="bg-gray-300 rounded-md py-1 px-3 hover:bg-gray-200 active:bg-gray-100 select-none"> 
+                    className="cursor-pointer bg-gray-300 rounded-md py-1 px-3 hover:bg-gray-200 active:bg-gray-100 select-none"> 
                     🗑️
                 </button>
             </label>
